@@ -59,7 +59,7 @@ Criticality is not stored: it is implied by the store the task lives in (VP-C003
 | `dead` | cancel | `cancelled`, `finished_at = now` — its group resumes |
 
 Every attempt records its outcome in `last_status`.
-- **A run never outlives its lease.** The handler is cancelled when the lease ends; an outcome is written only while the task is still `running` under the attempt that was claimed (`attempt` is the fencing token), so the late outcome of a run whose lease expired and whose task was claimed again is discarded. Hence two workers never run one task at the same time. Why: [adr/taskbox-run-bounded-by-lease](../docs/adr/taskbox-run-bounded-by-lease.md).
+- **A run never outlives its lease.** The handler is cancelled when the lease ends; an outcome is written only while the task is still `running` under the attempt that was claimed (`attempt` is the fencing token), so the late outcome of a run whose lease expired and whose task was claimed again is discarded. Hence two workers never run one task at the same time. Why: [adr/taskbox-run-bounded-by-lease](../doc/adr/taskbox-run-bounded-by-lease.md).
 
 - **At-least-once.** A task may run more than once (lease expiry mid-run, a crash between handler success and writing `done`). Every handler is idempotent.
 - **Backoff** `min(1s × 2^attempt, 1h)`; **lease** default 5 min — both configurable per service.
@@ -144,7 +144,7 @@ Same tables and columns; `seq` is `INTEGER PRIMARY KEY`; UUID, JSON, timestamps 
 
 ### Redis
 
-Ordering follows Kafka: a queue has a fixed number of **partitions**; each partition is a stream drained by **one worker at a time**, in stream order. A task's fields live in its own hash; streams and lists carry only task ids, so a task's state can change while its place in the order stays put. A partition holds many groups, so a stopped group is **parked** rather than left blocking its partition. All keys of a queue share the hash tag `{taskbox:<queue>}` so they sit in one cluster slot; to enqueue atomically with Redis business data, the caller's data keys must be in that slot too — the caller's concern. Why this shape: [adr/taskbox-redis-task-hash](../docs/adr/taskbox-redis-task-hash.md).
+Ordering follows Kafka: a queue has a fixed number of **partitions**; each partition is a stream drained by **one worker at a time**, in stream order. A task's fields live in its own hash; streams and lists carry only task ids, so a task's state can change while its place in the order stays put. A partition holds many groups, so a stopped group is **parked** rather than left blocking its partition. All keys of a queue share the hash tag `{taskbox:<queue>}` so they sit in one cluster slot; to enqueue atomically with Redis business data, the caller's data keys must be in that slot too — the caller's concern. Why this shape: [adr/taskbox-redis-task-hash](../doc/adr/taskbox-redis-task-hash.md).
 
 | Key | Type | Holds |
 | --- | --- | --- |
