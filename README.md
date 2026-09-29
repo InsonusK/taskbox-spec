@@ -12,7 +12,8 @@ This repository holds **no code**. It is what every TaskBox library conforms to:
 | [features/STEP-VOCABULARY.md](features/STEP-VOCABULARY.md) | The steps every library's runner implements, and the rules for running the feature |
 | [doc/skills/](doc/skills/) | Skills for agents: using TaskBox in a service, building a TaskBox library |
 | [doc/adr/](doc/adr/) | Decisions made inside the contract and about its use |
-| [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) | Contract gaps waiting on the owner — they block the Redis store |
+| [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) | Contract gaps waiting on the owner, and the resolved ones |
+| [contract/redis/iso_now.lua](contract/redis/iso_now.lua) | The shared Lua time formatting every Redis script uses |
 
 ## Libraries
 

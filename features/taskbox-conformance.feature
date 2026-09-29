@@ -376,6 +376,25 @@ Feature: TaskBox conformance
         | b    | absent | 0    |
 
     @boundary
+    Scenario: An idempotency key keeps blocking while its task waits longer than the retention
+      Given the TaskBox setting "default retention" is 1s
+      And the handler for "ok" answers:
+        | attempt | status |
+        | *       | 200    |
+      When these tasks are enqueued in a transaction that commits:
+        | task | type | idempotency key | run at |
+        | a    | ok   | order-42        | +3s    |
+      And 1500ms pass
+      And the retention cleanup runs
+      And these tasks are enqueued in a transaction that commits:
+        | task | type | idempotency key |
+        | b    | ok   | order-42        |
+      Then the tasks are:
+        | task | status  |
+        | a    | pending |
+        | b    | absent  |
+
+    @boundary
     Scenario: An idempotency key is free again once its task is removed
       Given the TaskBox setting "default retention" is 1s
       And the handler for "ok" answers:
