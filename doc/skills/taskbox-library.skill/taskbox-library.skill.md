@@ -25,6 +25,12 @@ tags:
 
 ## MUST
 
+### One repository per stack, one module per store
+Build a stack's library as one repository with a store-independent core (task values, handler registry, outcome classification, worker), one module per store, and one conformance runner shared by all stores; package it by the stack's idiom.
+- Violation: separate repositories per store, or one "persistent" and one "transient" library.
+- Risk: the core and the runner are duplicated or versioned apart; the persistent/transient split separates no dependency (PostgreSQL and SQLite differ by driver, Redis and InMemory by design).
+- Fix: Go — one module, a package per store (`pgstore`, `redisstore`, …); .NET — one solution, a project and NuGet package per store over a core package (`TaskBox`, `TaskBox.EntityFrameworkCore.PostgreSql`, `TaskBox.Redis`); Python — one distribution, a subpackage per store with its driver as an extra (`taskbox[postgres]`, `taskbox[redis]`). A service installs only the store it uses.
+
 ### Pin a spec release
 Consume this repository at a release tag (git submodule at `spec/`, or the release archive in CI) and state the pinned version in the library's README.
 - Risk: an unpinned spec changes under the library and its "conforms" claim stops meaning anything.
@@ -67,6 +73,7 @@ Write `doc/skills/taskbox-{stack}-usage.skill/` in the library: the dependency, 
 - Fix: one usage skill per library, updated with every API change.
 
 # Check list
+- [ ] One repository: a core, one module per store packaged by the stack's idiom, one conformance runner.
 - [ ] The README names the pinned spec release and the supported stores.
 - [ ] CI runs the pinned feature unchanged, once per store, against real stores; a missing store fails.
 - [ ] The group-lock and `attempt`-fence mutations were shown to fail the feature; the result is in the README.
