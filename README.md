@@ -10,7 +10,8 @@ This repository holds **no code**. It is what every TaskBox library conforms to:
 | [contract/schema/postgresql/v1.sql](contract/schema/postgresql/v1.sql) | PostgreSQL schema v1 as a file (identical to the contract's §6 DDL) |
 | [features/taskbox-conformance.feature](features/taskbox-conformance.feature) | The conformance scenarios (contract §8) as one Gherkin feature |
 | [features/STEP-VOCABULARY.md](features/STEP-VOCABULARY.md) | The steps every library's runner implements, and the rules for running the feature |
-| [docs/adr/](docs/adr/) | Decisions made inside the contract |
+| [doc/skills/](doc/skills/) | Skills for agents: using TaskBox in a service, building a TaskBox library |
+| [doc/adr/](doc/adr/) | Decisions made inside the contract and about its use |
 | [OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) | Contract gaps waiting on the owner — they block the Redis store |
 
 ## Libraries
